@@ -7,16 +7,20 @@ const getNode = (edges, base, ancorEdge) => {
 //  случаях. Т.е. надо опредлить поворот до правильного положения и выдать данные того ушка
 //  которое после поворота окажется в нужной позиции.
 
-function solvePuzzle(pieces) {
-  const res = [pieces[0].id];
-  let nodes = {
-      right: pieces[0].edges.right.edgeTypeId,
-      bottom: pieces[0].edges.bottom.edgeTypeId
-      }
-  console.log(pieces.length)
-  console.log({nodes});
 
-  for (let i = 1; i < pieces.length; i++) {
+const handler = obj => ({
+    id: obj.id,
+    edges: {
+        top: obj.edges.top ? obj.edges.top.edgeTypeId : 0,
+        right: obj.edges.right ? obj.edges.right.edgeTypeId : 0,
+        bottom: obj.edges.bottom ? obj.edges.bottom.edgeTypeId : 0,
+        left: obj.edges.left ? obj.edges.left.edgeTypeId : 0,
+    }
+});
+
+const findPiece = (data, nodes) => {
+// Функция должна вернуть id следуюшего элемента, и новые значения nodes
+// в ввиде массива из двух элементов
     for (const piece of pieces) {
       let secondEdge = undefined;
       let isNewRow = i % 10 === 0;
@@ -38,6 +42,24 @@ function solvePuzzle(pieces) {
           nodes.bottom = getNode(piece.edges, 'bottom', secondEdge)
         }
       }
+
+    };
+
+const preparing = pieces => {
+   const data = pieces.map(handler);
+   return nodes  => findPiece(data, nodes);
+   };
+
+function solvePuzzle(pieces) {
+  const res = [pieces[0].id];
+  let nodes = {
+      right: pieces[0].edges.right.edgeTypeId,
+      bottom: pieces[0].edges.bottom.edgeTypeId
+      }
+  const mapper = preparing(pieces);
+
+  for (let i = 1; i < pieces.length; i++) {
+    [elem, nodes] = mapper(nodes);
     }
   }
   console.log(res);
@@ -130,6 +152,18 @@ const data = [
 
 solvePuzzle(data);
 
+const res_1 = handler(
+  {
+    id: 6,
+    edges: {
+      top: { edgeTypeId: 11, type: "inside" },
+      right: { edgeTypeId: 10, type: "outside" },
+      bottom: { edgeTypeId: 6, type: "outside" },
+      left: null,
+      },
+    });
+console.log({res_1});
+ 
 // Не удаляйте эту строку
 // window.solvePuzzle = solvePuzzle;
 
