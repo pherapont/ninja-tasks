@@ -1,0 +1,20 @@
+{
+  "name": "ninja-tasks",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Программист Сергей принимает участие в соревновании по сборке паззлов `10x10` на скорость. Ему безумно хочется победить - ещё бы, ведь призом является уникальный паззл 100х100 с логотипом React, на котором оставил автограф сам Дэн Абрамов!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pherapont/ninja-tasks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pherapont/ninja-tasks/issues"
+  },
+  "homepage": "https://github.com/pherapont/ninja-tasks#readme"
+}
