@@ -1,12 +1,12 @@
 
 const handler = obj => ({
-    id: obj.id,
-    edges: {
-        top: obj.edges.top ? obj.edges.top.edgeTypeId : 0,
-        right: obj.edges.right ? obj.edges.right.edgeTypeId : 0,
-        bottom: obj.edges.bottom ? obj.edges.bottom.edgeTypeId : 0,
-        left: obj.edges.left ? obj.edges.left.edgeTypeId : 0,
-    }
+  id: obj.id,
+  edges: {
+    top: obj.edges.top ? obj.edges.top.edgeTypeId : 0,
+    right: obj.edges.right ? obj.edges.right.edgeTypeId : 0,
+    bottom: obj.edges.bottom ? obj.edges.bottom.edgeTypeId : 0,
+    left: obj.edges.left ? obj.edges.left.edgeTypeId : 0,
+  }
 });
 
 const searchNode = node => {
@@ -45,7 +45,8 @@ const solvePuzzle = pieces => {
 				}
 			}
 		}
-		searchField.filter(piece => piece.id != edgeId)
+		searchField = searchField.filter(piece => piece.id != edgeId);
+    console.log(searchField);
 		res.push(edgeId);
   	console.log(res);
 	}
