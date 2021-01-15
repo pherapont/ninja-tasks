@@ -1,12 +1,3 @@
-const getNode = (edges, base, ancorEdge) => {
-
-}
-
-//  Реализовать getNode. На вход объект ушек. Ушко котрое надо найти: превое или нижнее.
-//  Ушко, которое прикрепилось. Оно должно быть верхним - в начале ряда или левым в остальных
-//  случаях. Т.е. надо опредлить поворот до правильного положения и выдать данные того ушка
-//  которое после поворота окажется в нужной позиции.
-
 
 const handler = obj => ({
     id: obj.id,
@@ -18,54 +9,48 @@ const handler = obj => ({
     }
 });
 
-const findPiece = (data, nodes) => {
-// Функция должна вернуть id следуюшего элемента, и новые значения nodes
-// в ввиде массива из двух элементов
-    for (const piece of pieces) {
-      let secondEdge = undefined;
-      let isNewRow = i % 10 === 0;
-      let isEndRow = i % 10 === 9;
-      for (const [edge, edgeData] of Object.entries(piece.edges)) {
-        if (edgeData && !isNewRow && edgeData.edgeTypeId === nodes.right) {
-          secondEdge = edge;
-        }
-        if (edgeData && isNewRow && edgeData.edgeTypeId === nodes.bottom) {
-          secondEdge = edge;
-        }
-      }
-      if (secondEdge) {
-        res.push(piece.id);
-        if (!isEndRow) {
-          nodes.right = getNode(piece.edges, 'right', secondEdge)
-        }
-        if(isNewRow) {
-          nodes.bottom = getNode(piece.edges, 'bottom', secondEdge)
-        }
-      }
-
-    };
-
-const preparing = pieces => {
-   const data = pieces.map(handler);
-   return nodes  => findPiece(data, nodes);
-   };
-
-const solvePuzzle = pieces => {
-  const res = [pieces[0].id];
-  let nodes = {
-      right: pieces[0].edges.right.edgeTypeId,
-      bottom: pieces[0].edges.bottom.edgeTypeId
-      }
-  const mapper = preparing(pieces);
-
-  for (let i = 1; i < pieces.length; i++) {
-    [elem, nodes] = mapper(nodes);
-    }
-  }
-  console.log(res);
-  return res;
+const searchNode = node => {
+	
 }
 
+const solvePuzzle = pieces => {
+
+	const ROW_LENGTH = Math.sqrt(pieces.length);
+
+	let secondEdge = undefined;
+	let edgeId = undefined;
+	let searchField = pieces.map(handler);
+	let res = [pieces[0].id];
+	let nodeRight = pieces[0].edges.right.edgeTypeId;
+	let nodeBottom = pieces[0].edges.bottom.edgeTypeId;
+			
+  for (let i = 1; i < pieces.length; i++) {
+		let isNewRow = i % ROW_LENGTH === 0;
+		let isEndRow = i % ROW_LENGTH === ROW_LENGTH - 1;
+		for (const piece of searchField) {
+			for (const [edge, edgeTypeId] of Object.entries(piece.edges)) {
+
+				if (edgeTypeId && !isNewRow && edgeTypeId === nodeRight) {
+					secondEdge = edge;
+					nodeRight = searchNode('nodeRighth');
+					edgeId = piece.id;
+					break
+				}
+				if (edgeTypeId && isNewRow && edgeTypeId === nodeBottom) {
+					secondEdge = edge;
+					nodeRight = searchNode('nodeRight');
+					nodeBottom = searchNode('nodeBottom')
+					edgeId = piece.id;
+					break
+				}
+			}
+		}
+		searchField.filter(piece => piece.id != edgeId)
+		res.push(edgeId);
+  	console.log(res);
+	}
+	return res;
+}
 export {solvePuzzle, handler};
 
 // Не удаляйте эту строку
