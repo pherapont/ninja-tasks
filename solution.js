@@ -9,8 +9,11 @@ const handler = obj => ({
   }
 });
 
-const searchNode = node => {
-	
+const searchNode = (edge, piece) => {
+	const EDGES_LIST = ['top', 'right', 'bottom', 'left'];
+	const oppositePlace = (EDGES_LIST.indexOf(edge) + 2) % 4;
+	const oppositeEdge = EDGES_LIST[oppositePlace]; 
+	return piece.edges[oppositeEdge];
 }
 
 const solvePuzzle = pieces => {
@@ -19,40 +22,44 @@ const solvePuzzle = pieces => {
 
 	let secondEdge = undefined;
 	let edgeId = undefined;
-	let searchField = pieces.map(handler);
+	let searchField = pieces.slice(1).map(handler);
+	console.log(searchField[0]);
 	let res = [pieces[0].id];
 	let nodeRight = pieces[0].edges.right.edgeTypeId;
+	console.log({nodeRight});
 	let nodeBottom = pieces[0].edges.bottom.edgeTypeId;
 			
   for (let i = 1; i < pieces.length; i++) {
+		console.log(searchField);
 		let isNewRow = i % ROW_LENGTH === 0;
 		let isEndRow = i % ROW_LENGTH === ROW_LENGTH - 1;
-		for (const piece of searchField) {
-			for (const [edge, edgeTypeId] of Object.entries(piece.edges)) {
-
+		for (const item of searchField) {
+			for (const [edge, edgeTypeId] of Object.entries(item.edges)) {
 				if (edgeTypeId && !isNewRow && edgeTypeId === nodeRight) {
+					console.log({edgeTypeId}, 'right');
 					secondEdge = edge;
-					nodeRight = searchNode('nodeRighth');
-					edgeId = piece.id;
-					break
+					console.log({item});
+					nodeRight = searchNode(edge, item);
+					console.log({nodeRight});
+					edgeId = item.id;
 				}
 				if (edgeTypeId && isNewRow && edgeTypeId === nodeBottom) {
+					console.log({edgeTypeId}, 'bottom');
 					secondEdge = edge;
-					nodeRight = searchNode('nodeRight');
-					nodeBottom = searchNode('nodeBottom')
-					edgeId = piece.id;
-					break
+					nodeRight = searchNode(edge, item);
+					nodeBottom = searchNode(edge, item)
+					edgeId = item.id;
 				}
 			}
 		}
+
 		searchField = searchField.filter(piece => piece.id != edgeId);
-    console.log(searchField);
 		res.push(edgeId);
   	console.log(res);
 	}
 	return res;
 }
-export {solvePuzzle, handler};
+export {solvePuzzle, handler, searchNode};
 
 // Не удаляйте эту строку
 // window.solvePuzzle = solvePuzzle;

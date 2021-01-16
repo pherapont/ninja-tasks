@@ -1,4 +1,4 @@
-import {solvePuzzle, handler} from './solution.js';
+import {solvePuzzle, handler, searchNode} from './solution.js';
 
 const data = [
   {
@@ -96,4 +96,15 @@ const res_1 = handler(
       left: null,
       },
     });
-console.log({res_1});
+// console.log({res_1});
+
+const test_1 = searchNode('bottom', {
+  id: 7,
+  edges: {
+    top: 34,
+    right: 11, 
+    bottom: 7,
+    left: 0
+  }
+});
+// console.log(test_1);
