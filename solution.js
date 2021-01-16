@@ -9,21 +9,26 @@ const handler = obj => ({
   }
 });
 
-const searchNode = (edge, piece) => {
+const searchNode = (edge, piece, isNewRow = false) => {
 	const EDGES_LIST = ['top', 'right', 'bottom', 'left'];
 	const oppositePlace = (EDGES_LIST.indexOf(edge) + 2) % 4;
+  const preOppositePlace = (EDGES_LIST.indexOf(edge) + 1) % 4;
 	const oppositeEdge = EDGES_LIST[oppositePlace]; 
-	return piece.edges[oppositeEdge];
+  const preOppositeEdge = EDGES_LIST[preOppositePlace]; 
+  if (isNewRow) {
+    return [piece.edges[preOppositeEdge], piece.edges[oppositeEdge]]
+  } else {
+    return piece.edges[oppositeEdge];
+  }
 }
 
 const solvePuzzle = pieces => {
 
 	const ROW_LENGTH = Math.sqrt(pieces.length);
 
-	let secondEdge = undefined;
 	let edgeId = undefined;
 	let searchField = pieces.slice(1).map(handler);
-	console.log(searchField[0]);
+  console.log(pieces[0].edges);
 	let res = [pieces[0].id];
 	let nodeRight = pieces[0].edges.right.edgeTypeId;
 	console.log({nodeRight});
@@ -33,24 +38,29 @@ const solvePuzzle = pieces => {
 		console.log(searchField);
 		let isNewRow = i % ROW_LENGTH === 0;
 		let isEndRow = i % ROW_LENGTH === ROW_LENGTH - 1;
+    let notDone = true;
 		for (const item of searchField) {
-			for (const [edge, edgeTypeId] of Object.entries(item.edges)) {
-				if (edgeTypeId && !isNewRow && edgeTypeId === nodeRight) {
-					console.log({edgeTypeId}, 'right');
-					secondEdge = edge;
-					console.log({item});
-					nodeRight = searchNode(edge, item);
-					console.log({nodeRight});
-					edgeId = item.id;
-				}
-				if (edgeTypeId && isNewRow && edgeTypeId === nodeBottom) {
-					console.log({edgeTypeId}, 'bottom');
-					secondEdge = edge;
-					nodeRight = searchNode(edge, item);
-					nodeBottom = searchNode(edge, item)
-					edgeId = item.id;
-				}
-			}
+      if (notDone) {
+        for (const [edge, edgeTypeId] of Object.entries(item.edges)) {
+          if (edgeTypeId && !isNewRow && edgeTypeId === nodeRight) {
+            console.log({edgeTypeId}, 'right');
+            console.log({edge});
+            console.log({item});
+            nodeRight = searchNode(edge, item);
+            console.log({nodeRight});
+            edgeId = item.id;
+            notDone = false;
+            break
+          }
+          if (edgeTypeId && isNewRow && edgeTypeId === nodeBottom) {
+            console.log({edgeTypeId}, 'bottom');
+            [nodeRight, nodeBottom] = searchNode(edge, item, true)
+            edgeId = item.id;
+            notDone = false;
+            break
+          }
+        }
+      }
 		}
 
 		searchField = searchField.filter(piece => piece.id != edgeId);
