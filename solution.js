@@ -1,3 +1,4 @@
+// Add search of the first element position by programm way
 
 const handler = obj => ({
   id: obj.id,
@@ -23,6 +24,7 @@ const searchNode = (edge, piece, isNewRow = false) => {
 }
 
 const solvePuzzle = pieces => {
+	console.log(pieces);
 
 	const ROW_LENGTH = Math.sqrt(pieces.length);
 
@@ -30,9 +32,9 @@ const solvePuzzle = pieces => {
 	let searchField = pieces.slice(1).map(handler);
   console.log(pieces[0].edges);
 	let res = [pieces[0].id];
-	let nodeRight = pieces[0].edges.right.edgeTypeId;
+	let nodeRight = pieces[0].edges.bottom.edgeTypeId; //right
 	console.log({nodeRight});
-	let nodeBottom = pieces[0].edges.bottom.edgeTypeId;
+	let nodeBottom = pieces[0].edges.left.edgeTypeId; //bottom
 			
   for (let i = 1; i < pieces.length; i++) {
 		console.log(searchField);
@@ -69,8 +71,8 @@ const solvePuzzle = pieces => {
 	}
 	return res;
 }
-export {solvePuzzle, handler, searchNode};
+// export {solvePuzzle, handler, searchNode};
 
 // Не удаляйте эту строку
-// window.solvePuzzle = solvePuzzle;
+window.solvePuzzle = solvePuzzle;
 
